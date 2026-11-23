@@ -77,3 +77,7 @@
 ## Validation still missing
 
 No outreach has been sent. No adopter, real imported evaluation file, repeat use or willingness to pay is established. The demo is synthetic. A useful next question is whether the r/mlops author's existing Braintrust views already meet their needs, or whether an offline two-axis review is useful. Any outreach wording and recipient require user review before sending, and subreddit rules must permit it. No earnings, donations or payment accounts are configured. Do not imply affiliation or endorsement from the source authors or existing tools.
+
+## Participation check, November 24, 2026
+
+Expanded live r/mlops rules at https://www.reddit.com/r/mlops/ prohibit agent-posted discourse. No automated post/comment or cold-DM workaround is planned for this community. No outreach has been sent. The source author profile at https://www.reddit.com/user/AwakeFlask/ was readable and consistent with the observed handle and post, but this does not authenticate identity, independence or purchase intent. A human-led conversation or a different permitted research venue would be needed.

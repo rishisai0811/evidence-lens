@@ -75,8 +75,12 @@ npm run test:browser
 
 `core.js` owns parsing, validation, metrics and matched-case comparison. `app.js` owns the interface and file-read handling. `template.html` owns layout and explanatory copy. `build.js` creates the standalone artifact. `tests/core.test.js` and `tests/browser.spec.js` reproduce the checks.
 
-Local initial checks: 38 unit tests and 11 Chromium browser tests, including 200 generated CSV round trips, 50,000-row import, matched-ID exclusion, failed/truncated/unknown records, HTML-injection handling, stale file reads, JSON download and 320/390/1280px responsive checks. See source tests rather than treating the counts as evidence of completeness.
+Local v0.1.1 checks: 39 unit tests and 12 Chromium browser tests, including 200 generated CSV round trips, 50,000-row import, matched-ID exclusion, failed/truncated/unknown records, HTML-injection handling, stale file reads, JSON download and 320/390/1280px responsive checks. See source tests rather than treating the counts as evidence of completeness.
 
 ## Rights
 
 No license granting reuse has been selected. Source-visible is not the same as open-source. Third-party software used in development retains its own licenses. No third-party product code is copied into the application.
+
+## v0.1.1 cleanup
+
+Clear and input replacement now remove rendered records and run labels from the hidden results DOM, rather than only hiding them. This improves cleanup; it is still not forensic secure erasure. A browser regression covers the old behavior. An additional deterministic reference test compares four rates across 1,000 generated datasets.
