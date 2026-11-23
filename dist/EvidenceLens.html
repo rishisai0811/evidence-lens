@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>Evidence Lens</title><style>:root {
+    --ds-terracotta: #c95f5b;
+    --ds-orange: #e36d42;
+    --ds-ochre: #d8b76a;
+    --ds-olive: #a8af6d;
+    --ds-seafoam: #7f9c7d;
+    --ds-mint: #c0e1dc;
+    --ds-blue: #5c76ad;
+    --ds-indigo: #706f9c;
+    --ds-purple: #987fa0;
+    --ds-salmon: #d99091;
+    --ds-pink: #fac7c2;
+    --ds-background-1: #ffffff;
+    --ds-background-2: #fdfcfb;
+    --ds-background-3: #dacbc0;
+    --ds-foreground-1: #4d3533;
+    --ds-foreground-2: rgb(77 53 51 / 0.7);
+    --ds-foreground-3: rgb(77 53 51 / 0.5);
+    --ds-foreground-4: rgb(77 53 51 / 0.2);
+    --ds-foreground-5: rgb(77 53 51 / 0.05);
+    --ds-border: var(--ds-foreground-4);
+    --ds-hairline: rgb(77 53 51 / 0.1);
+    --ds-muted: #f6f2ef;
+    --ds-primary: var(--ds-foreground-1);
+    --ds-on-primary: #fdfcfb;
+    --ds-success: #73a89a;
+    --ds-success-wash: rgb(115 168 154 / 0.1);
+    --ds-danger: #ed313e;
+    --ds-danger-wash: rgb(237 49 62 / 0.1);
+    --ds-radius: 12px;
+    --ds-radius-compact: 8px;
+    --ds-control: 44px;
+    --ds-control-compact: 32px;
+    --ds-fg1: var(--ds-foreground-1);
+    --ds-fg2: var(--ds-foreground-2);
+    --ds-fg3: var(--ds-foreground-3);
+    --ds-fg4: var(--ds-foreground-4);
+    --ds-fg5: var(--ds-foreground-5);
+    --ds-bg1: var(--ds-background-1);
+    --ds-bg2: var(--ds-background-2);
+    --ds-bg3: var(--ds-background-3);
+    --ds-white: var(--ds-background-1);
+    --ds-page: var(--ds-background-2);
+    --ds-raised: var(--ds-muted);
+    --ds-ink: var(--ds-foreground-1);
+    --ds-ink-2: var(--ds-foreground-2);
+    --ds-ink-3: var(--ds-foreground-3);
+    --ds-ink-4: var(--ds-foreground-4);
+    --ds-teal: var(--ds-success);
+    --ds-red: var(--ds-danger);
+    --ds-red-border: var(--ds-danger);
+    --ds-hover: var(--ds-foreground-5);
+    --ds-hover-strong: color-mix(in srgb, #4d3533 10%, transparent);
+    --ds-hover-red: color-mix(in srgb, #ed313e 5%, transparent);
+    --ds-scrim: rgb(77 53 51 / 0.4);
+    --ds-shadow-control: 0 1px 2px color-mix(in srgb, #251f21 5%, transparent);
+    --ds-ring: 0 0 0 1px rgb(77 53 51 / 0.05);
+    --ds-elevation-0: 0 1px 2px rgb(77 53 51 / 0.05);
+    --ds-elevation-1: 0 2px 5px rgb(77 53 51 / 0.075), 0 9px 10px rgb(77 53 51 / 0.064), 0 21px 13px rgb(77 53 51 / 0.038), 0 38px 16px rgb(77 53 51 / 0.011), 0 59px 16px rgb(77 53 51 / 0);
+    --ds-elevation-2: var(--ds-ring), 0 6px 12px rgb(77 53 51 / 0.1), 0 22px 23px rgb(77 53 51 / 0.085), 0 50px 31px rgb(77 53 51 / 0.05), 0 88px 37px rgb(77 53 51 / 0.015), 0 138px 38px rgb(77 53 51 / 0);
+    --ds-elevation-3: 0 11px 24px rgb(77 53 51 / 0.13), 0 44px 45px rgb(77 53 51 / 0.111), 0 99px 62px rgb(77 53 51 / 0.065), 0 176px 73px rgb(77 53 51 / 0.019), 0 275px 77px rgb(77 53 51 / 0);
+    --ds-lift: var(--ds-elevation-0);
+    --ds-shadow-modal: var(--ds-elevation-3);
+    --ds-font-display: "Aime", Georgia, serif;
+    --ds-font-text: "KMR Melange Grotesk", -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+*{box-sizing:border-box}body{margin:0;background:white;color:var(--ds-ink);font:16px/1.6 system-ui,sans-serif}main{max-width:1200px;margin:auto;padding:36px}h1,h2,h3{line-height:1.2}h1{font-size:40px;font-weight:500;letter-spacing:-.04em;margin:6px 0 16px}h2{font-size:25px;font-weight:500;margin-top:36px}h3{font-size:18px}p{max-width:850px}.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ds-ink-2)}.quiet{color:var(--ds-ink-2)}.notice{background:var(--ds-raised);padding:16px 20px;border-radius:8px;margin:20px 0}.controls{display:flex;gap:12px;align-items:end;flex-wrap:wrap}button,select,input{font:inherit;min-height:44px}button{padding:9px 18px;border:1px solid var(--ds-ink);background:white;color:var(--ds-ink);border-radius:4px;cursor:pointer}button.primary{background:var(--ds-ink);color:white}button:hover{opacity:.82}button:disabled{opacity:.4;cursor:default}button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--ds-teal);outline-offset:3px}select{padding:6px 10px;max-width:100%;border:1px solid var(--ds-ink-2);border-radius:4px;background:white}label{display:flex;flex-direction:column;gap:6px;font-size:14px}textarea{font:13px/1.5 ui-monospace,monospace;width:100%;min-height:180px;resize:vertical;border:1px solid var(--ds-hairline);border-radius:6px;padding:14px;color:var(--ds-ink)}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{border:1px solid var(--ds-hairline);padding:18px;border-radius:8px}.card h3{margin:0 0 9px}.number{font-size:30px;font-weight:600;color:var(--ds-teal);line-height:1.2}.detail{font-size:13px;margin:8px 0 0}.error{color:var(--ds-red);font-weight:600;white-space:pre-wrap}.row{padding:14px 0;border-bottom:1px solid var(--ds-hairline);overflow-wrap:anywhere}.row p{margin:4px 0}.tag{font-size:12px;border:1px solid var(--ds-hairline);padding:2px 8px;border-radius:12px;display:inline-block}.summaryline{display:flex;justify-content:space-between;gap:20px}.chart{height:12px;border-radius:3px;background:var(--ds-raised);overflow:hidden;margin-top:10px}.fill{height:100%;background:var(--ds-teal)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}details{margin:20px 0}summary{cursor:pointer;min-height:44px;display:list-item;padding:10px 0}code{font-size:13px;overflow-wrap:anywhere}pre{padding:15px;background:var(--ds-raised);overflow:auto;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}footer{border-top:1px solid var(--ds-hairline);padding-top:20px;margin-top:40px;font-size:13px}.hidden{display:none!important}#status{min-height:26px}input[type=file]{max-width:100%;width:100%} .fieldfile{flex:1;min-width:200px}.small{font-size:13px}#results{scroll-margin-top:24px}@media(max-width:700px){main{padding:24px 18px}h1{font-size:34px}.cards,.grid2{grid-template-columns:1fr}.controls>*{max-width:100%}.summaryline{display:block}.number{font-size:28px}.controls button{flex-grow:1}.card{padding:16px}label{width:100%}}
+</style></head><body><main>
+<header><div class="eyebrow">Offline AI evaluation · engineering preview</div><h1>Evidence Lens</h1><p>Does your AI know when the evidence is missing?</p><p class="quiet">Inspect saved, human-labeled evaluation results. Keep unsupported answers, unnecessary abstentions and answer quality separate. A model that refuses everything should not look safe and useful.</p></header>
+<div class="notice"><strong>People supply the ground truth.</strong> This tool does not inspect photos, judge answers or infer whether evidence is sufficient. No model, account, API key or upload is needed. Files stay in this browser tab; nothing is saved automatically.</div>
+<section aria-labelledby="loadtitle"><h2 id="loadtitle">1. Load reviewed results</h2><div class="controls"><button id="demo">Try synthetic example</button><label class="fieldfile">Choose CSV or JSONL (up to 20 MiB)<input type="file" id="file" accept=".csv,.jsonl,.ndjson,text/csv,application/json"></label></div><details><summary>Input format and labeling rules</summary><p>One row per case and run. Case IDs must be unique within each run. Run comparisons use matching IDs only, and exclude cases with conflicting evidence or group labels.</p><pre>id,run,evidence,decision,correct,group,note
+case-1,baseline,sufficient,answer,true,clear-photo,Reviewed by a person
+case-2,baseline,insufficient,answer,,blurred-photo,Guessed beyond available evidence
+case-3,baseline,sufficient,abstain,,clear-photo,Could have answered</pre><p><code>evidence</code>: sufficient, insufficient, unknown. <code>decision</code>: answer, abstain, error, truncated. <code>correct</code>: true, false or empty/null, only for answers with sufficient evidence. Optional <code>group</code> and <code>note</code> are text. JSONL uses the same keys and boolean/null values, not boolean strings.</p><p>Label any response containing a substantive guess as <code>answer</code>, even if it also says it cannot answer. Missing/truncated responses are not abstentions. Unknown evidence and unreviewed answer quality remain visible rather than silently passing.</p><p>Human evidence labels should describe the same authorized evidence across runs. Use anonymized IDs and avoid importing sensitive photos, patient information or credentials. These labels and metrics are not clinical judgments.</p></details><label for="input">Or paste CSV / JSONL</label><textarea id="input" spellcheck="false" placeholder="Paste records here. Try the synthetic example to explore first."></textarea><div class="controls"><button class="primary" id="analyze">Inspect results</button><button id="clear">Clear all data</button><span id="status" role="status" aria-live="polite"></span></div><p id="error" class="error" role="alert"></p></section>
+<section id="results" class="hidden" aria-labelledby="resulttitle"><h2 id="resulttitle">2. Inspect each failure separately</h2><div class="controls"><label>Run<select id="run"></select></label><label>Group<select id="group"></select></label></div><p id="scope" class="quiet"></p><div id="cards" class="cards"></div><div id="warnings" class="notice"></div><h3>Outcomes</h3><div id="outcomes"></div>
+<h2>3. Compare the same cases</h2><div class="controls"><label>Baseline<select id="left"></select></label><label>Candidate<select id="right"></select></label><button id="compare">Compare matched IDs</button></div><div id="comparison" aria-live="polite"></div>
+<h2>Review the underlying cases</h2><div class="controls"><label>Outcome<select id="outcome"><option value="">All outcomes</option></select></label><button id="export">Download audit JSON</button><button id="exportRows">Download filtered JSONL</button></div><p id="rowCount" class="quiet"></p><div id="rows"></div><button id="more" class="hidden">Show 50 more</button></section>
+<footer><strong>Engineering preview, not validated demand.</strong> Inspired by a reported multimodal evaluation workflow, not a customer commitment. No causal, deployment-readiness, statistical-significance or medical claim is made. Rates describe your reviewed sample only. Missing data and execution failures can bias comparisons. <details><summary>Definitions and limits</summary><p>Unsupported-answer rate = answers / completed cases labeled insufficient evidence. Unnecessary-abstention rate = abstentions / completed cases labeled sufficient evidence. Answer accuracy = correct / quality-reviewed answers with sufficient evidence. Useful yield = known-correct answers / all cases labeled sufficient evidence, including failures and missing reviews in the denominator. Coverage = answers / completed cases with known evidence labels. Completion = answer or abstain / all rows. A zero denominator is not a zero rate.</p><p>Comparisons are descriptive matched-case counts. No significance test or automatic winner. Different correctness labels are allowed across runs because answers may differ; evidence and group conflicts are excluded. Groups are user-defined, not discovered automatically. There is no provider-specific import adapter, model execution, image storage or automatic label extraction. Strict CSV/JSONL input is required. At most 50,000 rows / 20 MiB. Downloaded reports can contain your notes; inspect them before sharing.</p></details></footer></main>
+<script>'use strict';
+(function(root){
+const FIELDS=['id','run','evidence','decision','correct','group','note'];
+function fail(message){throw new Error(message);}
+function parseCSV(text){
+  const out=[]; let row=[], field='', quoted=false, ended=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(quoted){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{quoted=false;ended=true;}}else field+=c;}
+    else if(ended){if(c===','){row.push(field);field='';ended=false;}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);out.push(row);row=[];field='';ended=false;}else fail('Unexpected text after closing CSV quote.');}
+    else if(c==='"'){if(field!=='')fail('CSV quote must begin a field.');quoted=true;}
+    else if(c===','){row.push(field);field='';}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);out.push(row);row=[];field='';}
+    else field+=c;
+  }
+  if(quoted)fail('Unclosed CSV quote.');
+  if(field!==''||row.length||ended){row.push(field);out.push(row);}
+  return out;
+}
+function parse(text,format='auto'){
+  if(typeof text!=='string')fail('Input must be text.');
+  if(new TextEncoder().encode(text).byteLength>20*1024*1024)fail('Input exceeds the 20 MiB text limit.');
+  text=text.replace(/^\uFEFF/,'');
+  if(!text.trim())fail('Add JSONL or CSV records first.');
+  if(format==='auto')format=text.trimStart().startsWith('{')?'jsonl':'csv';
+  let rows;
+  if(format==='jsonl'){
+    const lines=text.split(/\r?\n/).filter(x=>x.trim());
+    if(lines.length>50000)fail('At most 50,000 records are supported.');
+    rows=lines.map((line,i)=>{try{return JSON.parse(line);}catch{fail('Invalid JSON on non-empty line '+(i+1)+'.');}});
+  }else if(format==='csv'){
+    const data=parseCSV(text);const header=data.shift()||[];
+    if(new Set(header).size!==header.length)fail('CSV headers must be unique.');
+    for(const f of ['id','run','evidence','decision'])if(!header.includes(f))fail('CSV is missing header: '+f);
+    for(const f of header)if(!FIELDS.includes(f))fail('Unknown CSV header: '+f);
+    if(data.length>50000)fail('At most 50,000 records are supported.');
+    rows=data.map((cells,i)=>{
+      if(cells.length!==header.length)fail('CSV record '+(i+2)+' has '+cells.length+' fields; expected '+header.length+'.');
+      const item={};header.forEach((k,j)=>{item[k]=cells[j];});
+      if('correct' in item){if(item.correct==='true')item.correct=true;else if(item.correct==='false')item.correct=false;else if(item.correct==='')item.correct=null;else fail('CSV correct must be true, false or empty, record '+(i+2)+'.');}
+      return item;
+    });
+  }else fail('Unknown format.');
+  return validate(rows);
+}
+function validate(rows){
+  if(!Array.isArray(rows)||!rows.length)fail('At least one record is required.');
+  if(rows.length>50000)fail('At most 50,000 records are supported.');
+  const seen=new Map();
+  return rows.map((r,i)=>{
+    const at='Record '+(i+1)+': ';
+    if(!r||typeof r!=='object'||Array.isArray(r))fail(at+'expected an object.');
+    for(const f of Object.keys(r))if(!FIELDS.includes(f))fail(at+'unknown field '+f+'.');
+    for(const f of ['id','run'])if(typeof r[f]!=='string'||!r[f].trim()||r[f].length>200)fail(at+f+' must be non-empty text, at most 200 characters.');
+    if(!['sufficient','insufficient','unknown'].includes(r.evidence))fail(at+'evidence must be sufficient, insufficient or unknown.');
+    if(!['answer','abstain','error','truncated'].includes(r.decision))fail(at+'decision must be answer, abstain, error or truncated.');
+    if(r.correct!==undefined&&r.correct!==null&&typeof r.correct!=='boolean')fail(at+'correct must be true, false or null.');
+    if(r.correct!=null&&(r.evidence!=='sufficient'||r.decision!=='answer'))fail(at+'correct is only allowed for answered cases with sufficient evidence.');
+    for(const f of ['group','note'])if(r[f]!==undefined&&(typeof r[f]!=='string'||r[f].length>4000))fail(at+f+' must be text, at most 4,000 characters.');
+    let ids=seen.get(r.run);if(!ids){ids=new Set();seen.set(r.run,ids);}if(ids.has(r.id))fail(at+'duplicate id in run '+r.run+'.');ids.add(r.id);
+    return {id:r.id,run:r.run,evidence:r.evidence,decision:r.decision,correct:r.correct??null,group:r.group||'(ungrouped)',note:r.note||''};
+  });
+}
+function outcome(r){
+  if(r.decision==='error'||r.decision==='truncated')return r.decision;
+  if(r.evidence==='unknown')return 'evidence unreviewed';
+  if(r.evidence==='insufficient')return r.decision==='answer'?'unsupported answer':'appropriate abstention';
+  if(r.decision==='abstain')return 'unnecessary abstention';
+  return r.correct===null?'answer quality unreviewed':r.correct?'supported correct answer':'supported wrong answer';
+}
+function rate(n,d){return {numerator:n,denominator:d,value:d?n/d:null};}
+function summarize(rows){
+  const count={total:rows.length,sufficient:0,insufficient:0,unknown:0,answer:0,abstain:0,error:0,truncated:0};const outcomes={};
+  let knownCompleted=0,knownAnswered=0,unsupported=0,unnecessary=0,insufficientCompleted=0,sufficientCompleted=0,judged=0,correct=0,unjudged=0;
+  for(const r of rows){count[r.evidence]++;count[r.decision]++;const o=outcome(r);outcomes[o]=(outcomes[o]||0)+1;
+    if(r.decision==='error'||r.decision==='truncated')continue;
+    if(r.evidence!=='unknown'){knownCompleted++;if(r.decision==='answer')knownAnswered++;}
+    if(r.evidence==='insufficient'){insufficientCompleted++;if(r.decision==='answer')unsupported++;}
+    if(r.evidence==='sufficient'){sufficientCompleted++;if(r.decision==='abstain')unnecessary++;else if(r.correct===null)unjudged++;else{judged++;if(r.correct)correct++;}}
+  }
+  return {count,outcomes,rates:{unsupported:rate(unsupported,insufficientCompleted),unnecessary:rate(unnecessary,sufficientCompleted),answerAccuracy:rate(correct,judged),coverage:rate(knownAnswered,knownCompleted),completion:rate(count.answer+count.abstain,rows.length),usefulYield:rate(correct,count.sufficient),missingQuality:rate(unjudged,sufficientCompleted-unnecessary)},notes:{qualityUnreviewed:unjudged,evidenceUnreviewed:count.unknown,excludedExecution:count.error+count.truncated}};
+}
+function analyze(rows){
+  rows=validate(rows);const runs=new Map();
+  for(const r of rows){if(!runs.has(r.run))runs.set(r.run,[]);runs.get(r.run).push(r);}
+  return {schema_version:1,records:rows.length,runs:Array.from(runs,([name,rs])=>{const groups=new Map();for(const r of rs){if(!groups.has(r.group))groups.set(r.group,[]);groups.get(r.group).push(r);}return {name,...summarize(rs),groups:Array.from(groups,([name,items])=>({name,...summarize(items)}))};})};
+}
+function compare(rows,a,b){
+  if(a===b)fail('Choose different runs.');
+  const left=new Map(rows.filter(r=>r.run===a).map(r=>[r.id,r]));const right=new Map(rows.filter(r=>r.run===b).map(r=>[r.id,r]));
+  if(!left.size||!right.size)fail('Both comparison runs must exist.');
+  const matched=[],conflicts=[],onlyLeft=[],onlyRight=[];
+  for(const [id,l]of left){const r=right.get(id);if(!r){onlyLeft.push(id);continue;}if(l.evidence!==r.evidence||l.group!==r.group){conflicts.push(id);continue;}matched.push({id,from:outcome(l),to:outcome(r),changed:outcome(l)!==outcome(r)});}
+  for(const id of right.keys())if(!left.has(id))onlyRight.push(id);
+  const ids=new Set(matched.map(r=>r.id));
+  return {from:a,to:b,matched:matched.length,changed:matched.filter(r=>r.changed).length,conflicts,onlyLeft,onlyRight,transitions:matched,fromSummary:summarize([...left.values()].filter(r=>ids.has(r.id))),toSummary:summarize([...right.values()].filter(r=>ids.has(r.id)))};
+}
+function toCSV(rows){return FIELDS.join(',')+'\r\n'+rows.map(r=>FIELDS.map(k=>{const s=r[k]===null||r[k]===undefined?'':String(r[k]);return /[",\r\n]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;}).join(',')).join('\r\n');}
+function demo(){
+  const rows=[];
+  for(const run of ['Always answers','Always abstains','Balanced preview'])for(let i=1;i<=12;i++){
+    const sufficient=i<=8;const decision=run==='Always answers'?'answer':run==='Always abstains'?'abstain':i===12?'error':i===8||i>=10?'abstain':'answer';
+    rows.push({id:'case-'+i,run,evidence:sufficient?'sufficient':'insufficient',decision,correct:sufficient&&decision==='answer'?i!==7:null,group:i%2?'Photo A':'Photo B',note:'Synthetic example, not measured model performance.'});
+  }
+  return rows;
+}
+const api={parseCSV,parse,validate,outcome,rate,summarize,analyze,compare,toCSV,demo};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.EvidenceLens=api;
+})(typeof globalThis==='undefined'?this:globalThis);
+</script><script>'use strict';
+const E=EvidenceLens,$=id=>document.getElementById(id);let records=[],audit=null,generation=0,limit=50;
+const labels={unsupported:['Unsupported answers','Completed insufficient-evidence cases answered anyway. Lower is better.'],unnecessary:['Unnecessary abstentions','Completed sufficient-evidence cases declined. Lower is better.'],answerAccuracy:['Reviewed answer accuracy','Only sufficient-evidence answers with a quality label. Higher is better.'],coverage:['Answer coverage','Completed, known-evidence cases that were answered. Not a safety score.'],completion:['Execution completion','Answers or abstentions out of all rows. Errors are not abstentions.'],usefulYield:['Known-correct useful yield','Known-correct answers out of every sufficient-evidence case. Unreviewed answers are not counted as correct.']};
+function node(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;}
+function pct(v){return v===null?'Not measurable':(100*v).toFixed(1)+'%';}
+function resetResults(){records=[];audit=null;$('results').classList.add('hidden');$('comparison').replaceChildren();$('status').textContent='';$('error').textContent='';}
+function select(id,values){const s=$(id);s.replaceChildren();for(const [value,label]of values){const o=node('option',label);o.value=value;s.append(o);}}
+function inspect(){generation++;resetResults();try{records=E.parse($('input').value);audit=E.analyze(records);select('run',audit.runs.map(x=>[x.name,x.name]));select('left',audit.runs.map(x=>[x.name,x.name]));select('right',audit.runs.map(x=>[x.name,x.name]));if(audit.runs.length>1)$('right').selectedIndex=1;$('results').classList.remove('hidden');$('status').textContent=records.length+' records inspected. No data sent.';updateGroups();}catch(e){$('error').textContent=e.message;}}
+function updateGroups(){const rs=records.filter(r=>r.run===$('run').value);select('group',[['','All groups'],...Array.from(new Set(rs.map(r=>r.group))).map(x=>[x,x])]);render();}
+function scopeRows(){return records.filter(r=>r.run===$('run').value&&(!$('group').value||r.group===$('group').value));}
+function render(){const rs=scopeRows(),s=E.summarize(rs);$('scope').textContent=rs.length+' records · '+$('run').value+' · '+($('group').value||'all groups');$('cards').replaceChildren();for(const [key,[title,description]]of Object.entries(labels)){const rate=s.rates[key],card=node('div',undefined,'card');const value=node('div',pct(rate.value),'number');if((key==='unsupported'||key==='unnecessary')&&rate.numerator>0)value.style.color='var(--ds-red)';else if(key==='coverage'||key==='completion')value.style.color='var(--ds-ink)';card.append(node('h3',title),value,node('p',rate.numerator+' / '+rate.denominator+' cases','detail'),node('p',description,'detail quiet'));$('cards').append(card);}
+$('warnings').textContent=s.notes.excludedExecution+' execution failures/truncations excluded from behavior rates; '+s.notes.evidenceUnreviewed+' rows have unknown evidence; '+s.notes.qualityUnreviewed+' sufficient-evidence answers lack quality review. No combined safety score is calculated.';
+$('outcomes').replaceChildren();for(const [name,count]of Object.entries(s.outcomes)){const row=node('div',undefined,'row'),top=node('div',undefined,'summaryline');top.append(node('span',name),node('strong',String(count)));const bar=node('div',undefined,'chart'),fill=node('div',undefined,'fill');if(['unsupported answer','unnecessary abstention','supported wrong answer','error','truncated'].includes(name))fill.style.background='var(--ds-red)';fill.style.width=(100*count/Math.max(1,rs.length))+'%';bar.append(fill);row.append(top,bar);$('outcomes').append(row);}
+select('outcome',[['','All outcomes'],...Object.keys(s.outcomes).map(x=>[x,x])]);limit=50;renderRows();}
+function filtered(){return scopeRows().filter(r=>!$('outcome').value||E.outcome(r)===$('outcome').value);}
+function renderRows(){const rs=filtered();$('rows').replaceChildren();$('rowCount').textContent='Showing '+Math.min(limit,rs.length)+' of '+rs.length+' matching cases.';for(const r of rs.slice(0,limit)){const d=node('div',undefined,'row');d.append(node('strong',r.id),document.createTextNode(' '),node('span',E.outcome(r),'tag'),node('p','Evidence: '+r.evidence+' · Decision: '+r.decision+' · Group: '+r.group,'small'));if(r.note)d.append(node('p',r.note,'quiet small'));$('rows').append(d);}$('more').classList.toggle('hidden',limit>=rs.length);}
+function compare(){const box=$('comparison');box.replaceChildren();try{const c=E.compare(records,$('left').value,$('right').value);box.append(node('p',c.matched+' matched cases; '+c.changed+' changed outcomes. '+c.conflicts.length+' label conflicts excluded. '+c.onlyLeft.length+' baseline-only; '+c.onlyRight.length+' candidate-only.'));
+for(const key of ['unsupported','unnecessary','answerAccuracy','completion','usefulYield']){const a=c.fromSummary.rates[key],b=c.toSummary.rates[key];box.append(node('p',labels[key][0]+': '+pct(a.value)+' ('+a.numerator+'/'+a.denominator+') → '+pct(b.value)+' ('+b.numerator+'/'+b.denominator+')','small'));}
+box.append(node('p','Matched IDs are not proof of identical prompts or inputs. Check your experiment design. No automatic winner or significance claim.','quiet small'));
+const changed=c.transitions.filter(x=>x.changed);for(const t of changed.slice(0,100))box.append(node('p',t.id+': '+t.from+' → '+t.to,'small'));if(changed.length>100)box.append(node('p','First 100 changes shown. Full transitions are in the audit JSON.'));if(c.conflicts.length)box.append(node('p','Conflicting IDs: '+c.conflicts.slice(0,100).join(', '),'error'));}catch(e){box.append(node('p',e.message,'error'));}}
+function download(name,text,type){const url=URL.createObjectURL(new Blob([text],{type}));const a=node('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('demo').onclick=()=>{generation++;$('file').value='';$('input').value=E.toCSV(E.demo());inspect();};$('analyze').onclick=inspect;
+$('input').addEventListener('input',()=>{generation++;resetResults();$('status').textContent='Input changed. Inspect again to update results.';});
+$('file').onchange=async()=>{const token=++generation;resetResults();const f=$('file').files[0];if(!f)return;if(f.size>20*1024*1024){$('error').textContent='File exceeds the 20 MiB limit.';return;}$('status').textContent='Reading file…';try{const text=await f.text();if(token!==generation)return;$('input').value=text;inspect();}catch{if(token===generation){resetResults();$('error').textContent='Could not read this file.';}}};
+$('clear').onclick=()=>{generation++;$('input').value='';$('file').value='';resetResults();$('status').textContent='All loaded data cleared from the interface.';};
+$('run').onchange=updateGroups;$('group').onchange=render;$('outcome').onchange=()=>{limit=50;renderRows();};$('more').onclick=()=>{limit+=50;renderRows();};$('compare').onclick=compare;
+$('export').onclick=()=>{if(!audit)return;const report={...audit,generated_at:new Date().toISOString(),caveats:['Human supplied evidence, action and quality labels. No automatic visual inspection or judgment.','Descriptive sample rates, not deployment readiness or significance.','Rates exclude execution failures and unknown evidence where defined. Inspect denominators.','No data sent to a server. Downloads contain notes and IDs; review before sharing.'],rows:records};if($('left').value!==$('right').value)report.comparison=E.compare(records,$('left').value,$('right').value);download('evidence-lens-audit.json',JSON.stringify(report,null,2),'application/json');};
+$('exportRows').onclick=()=>download('evidence-lens-cases.jsonl',filtered().map(x=>JSON.stringify(x)).join('\n'),'application/x-ndjson');
+</script></body></html>
