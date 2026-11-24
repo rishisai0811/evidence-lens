@@ -59,7 +59,7 @@ The app is self-contained, makes no runtime network requests, has no telemetry, 
 
 This does not judge image sufficiency, classify responses automatically, run models, select thresholds, annotate images, provide provider-specific import adapters, store projects, or claim statistical significance. Comparisons assume matching IDs refer to the same experiment inputs; IDs alone cannot prove this. Labels may be wrong, subjective or inconsistent. Convenience and adoption remain untested. It is not a replacement for Braintrust, domain review or selective-prediction research.
 
-Verified locally in Linux Chromium only. Windows, macOS, mobile operating systems, Firefox and WebKit have not been tested. Responsive viewport checks are not claims of testing a real phone. No hosted deployment or CI is configured.
+Verified locally in Linux Chromium. The0.1.2 suite passed13 browser cases in Linux Firefox as well. Windows, macOS, mobile operating systems and WebKit have not been tested successfully. Responsive viewport checks are not claims of testing a real phone. No hosted deployment or CI is configured.
 
 ## Development and checks
 
@@ -84,3 +84,7 @@ No license granting reuse has been selected. Source-visible is not the same as o
 ## v0.1.1 cleanup
 
 Clear and input replacement now remove rendered records and run labels from the hidden results DOM, rather than only hiding them. This improves cleanup; it is still not forensic secure erasure. A browser regression covers the old behavior. An additional deterministic reference test compares four rates across 1,000 generated datasets.
+
+## v0.1.2 comparison refresh
+
+Changing either comparison-run selector now refreshes the comparison immediately and displays the pair's names. Previously the selected pair could change while the old metrics stayed visible until Compare was clicked; exported audit JSON used the new pair. The new browser regression checks either selector, same-run error cleanup and screen/export agreement.39 unit tests and13 Linux Chromium tests pass; All13 Linux Firefox browser tests also pass. No data was altered by this display bug. Other limitations and unvalidated adoption remain unchanged.
