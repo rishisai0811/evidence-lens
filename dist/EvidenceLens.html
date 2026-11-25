@@ -82,19 +82,22 @@ case-3,baseline,sufficient,abstain,,clear-photo,Could have answered</pre><p><cod
 (function(root){
 const FIELDS=['id','run','evidence','decision','correct','group','note'];
 function fail(message){throw new Error(message);}
-function parseCSV(text){
+function parseCSV(text,{maxRows=Infinity,maxColumns=Infinity,maxFieldLength=Infinity}={}){
   const out=[]; let row=[], field='', quoted=false, ended=false;
+  function append(c){if(field.length>=maxFieldLength)fail('CSV field exceeds the 4,000-character limit.');field+=c;}
+  function pushField(){if(row.length>=maxColumns)fail('CSV has too many fields; at most '+maxColumns+' supported.');row.push(field);}
+  function pushRow(){if(out.length>=maxRows)fail('At most 50,000 records are supported.');out.push(row);}
   for(let i=0;i<text.length;i++){
     const c=text[i];
-    if(quoted){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{quoted=false;ended=true;}}else field+=c;}
-    else if(ended){if(c===','){row.push(field);field='';ended=false;}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);out.push(row);row=[];field='';ended=false;}else fail('Unexpected text after closing CSV quote.');}
+    if(quoted){if(c==='"'){if(text[i+1]==='"'){append('"');i++;}else{quoted=false;ended=true;}}else append(c);}
+    else if(ended){if(c===','){pushField();field='';ended=false;}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;pushField();pushRow();row=[];field='';ended=false;}else fail('Unexpected text after closing CSV quote.');}
     else if(c==='"'){if(field!=='')fail('CSV quote must begin a field.');quoted=true;}
-    else if(c===','){row.push(field);field='';}
-    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);out.push(row);row=[];field='';}
-    else field+=c;
+    else if(c===','){pushField();field='';}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;pushField();pushRow();row=[];field='';}
+    else append(c);
   }
   if(quoted)fail('Unclosed CSV quote.');
-  if(field!==''||row.length||ended){row.push(field);out.push(row);}
+  if(field!==''||row.length||ended){pushField();pushRow();}
   return out;
 }
 function parse(text,format='auto'){
@@ -105,11 +108,17 @@ function parse(text,format='auto'){
   if(format==='auto')format=text.trimStart().startsWith('{')?'jsonl':'csv';
   let rows;
   if(format==='jsonl'){
-    const lines=text.split(/\r?\n/).filter(x=>x.trim());
-    if(lines.length>50000)fail('At most 50,000 records are supported.');
-    rows=lines.map((line,i)=>{try{return JSON.parse(line);}catch{fail('Invalid JSON on non-empty line '+(i+1)+'.');}});
+    rows=[];let start=0,lineNumber=0;
+    for(let i=0;i<=text.length;i++){
+      if(i!==text.length&&text[i]!=='\n')continue;
+      const line=text.slice(start,i);start=i+1;
+      if(!line.trim())continue;
+      if(rows.length>=50000)fail('At most 50,000 records are supported.');
+      lineNumber++;
+      try{rows.push(JSON.parse(line));}catch{fail('Invalid JSON on non-empty line '+lineNumber+'.');}
+    }
   }else if(format==='csv'){
-    const data=parseCSV(text);const header=data.shift()||[];
+    const data=parseCSV(text,{maxRows:50001,maxColumns:FIELDS.length,maxFieldLength:4000});const header=data.shift()||[];
     if(new Set(header).size!==header.length)fail('CSV headers must be unique.');
     for(const f of ['id','run','evidence','decision'])if(!header.includes(f))fail('CSV is missing header: '+f);
     for(const f of header)if(!FIELDS.includes(f))fail('Unknown CSV header: '+f);
@@ -193,7 +202,7 @@ function node(tag,text,cls){const n=document.createElement(tag);if(text!==undefi
 function pct(v){return v===null?'Not measurable':(100*v).toFixed(1)+'%';}
 function resetResults(){records=[];audit=null;$('results').classList.add('hidden');for(const id of ['comparison','cards','warnings','outcomes','rows','scope','rowCount','run','group','left','right'])$(id).replaceChildren();select('outcome',[['','All outcomes']]);$('more').classList.add('hidden');$('status').textContent='';$('error').textContent='';}
 function select(id,values){const s=$(id);s.replaceChildren();for(const [value,label]of values){const o=node('option',label);o.value=value;s.append(o);}}
-function inspect(){generation++;resetResults();try{records=E.parse($('input').value);audit=E.analyze(records);select('run',audit.runs.map(x=>[x.name,x.name]));select('left',audit.runs.map(x=>[x.name,x.name]));select('right',audit.runs.map(x=>[x.name,x.name]));if(audit.runs.length>1)$('right').selectedIndex=1;$('results').classList.remove('hidden');$('status').textContent=records.length+' records inspected. No data sent.';updateGroups();}catch(e){$('error').textContent=e.message;}}
+function inspect(source){generation++;resetResults();try{const text=typeof source==='string'?source:$('input').value;records=E.parse(text);if(typeof source==='string')$('input').value=text;audit=E.analyze(records);select('run',audit.runs.map(x=>[x.name,x.name]));select('left',audit.runs.map(x=>[x.name,x.name]));select('right',audit.runs.map(x=>[x.name,x.name]));if(audit.runs.length>1)$('right').selectedIndex=1;$('results').classList.remove('hidden');$('status').textContent=records.length+' records inspected. No data sent.';updateGroups();}catch(e){$('error').textContent=e.message;}}
 function updateGroups(){const rs=records.filter(r=>r.run===$('run').value);select('group',[['','All groups'],...Array.from(new Set(rs.map(r=>r.group))).map(x=>[x,x])]);render();}
 function scopeRows(){return records.filter(r=>r.run===$('run').value&&(!$('group').value||r.group===$('group').value));}
 function render(){const rs=scopeRows(),s=E.summarize(rs);$('scope').textContent=rs.length+' records · '+$('run').value+' · '+($('group').value||'all groups');$('cards').replaceChildren();for(const [key,[title,description]]of Object.entries(labels)){const rate=s.rates[key],card=node('div',undefined,'card');const value=node('div',pct(rate.value),'number');if((key==='unsupported'||key==='unnecessary')&&rate.numerator>0)value.style.color='var(--ds-red)';else if(key==='coverage'||key==='completion')value.style.color='var(--ds-ink)';card.append(node('h3',title),value,node('p',rate.numerator+' / '+rate.denominator+' cases','detail'),node('p',description,'detail quiet'));$('cards').append(card);}
@@ -209,7 +218,7 @@ const changed=c.transitions.filter(x=>x.changed);for(const t of changed.slice(0,
 function download(name,text,type){const url=URL.createObjectURL(new Blob([text],{type}));const a=node('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 $('demo').onclick=()=>{generation++;$('file').value='';$('input').value=E.toCSV(E.demo());inspect();};$('analyze').onclick=inspect;
 $('input').addEventListener('input',()=>{generation++;resetResults();$('status').textContent='Input changed. Inspect again to update results.';});
-$('file').onchange=async()=>{const token=++generation;resetResults();const f=$('file').files[0];if(!f)return;if(f.size>20*1024*1024){$('error').textContent='File exceeds the 20 MiB limit.';return;}$('status').textContent='Reading file…';try{const text=await f.text();if(token!==generation)return;$('input').value=text;inspect();}catch{if(token===generation){resetResults();$('error').textContent='Could not read this file.';}}};
+$('file').onchange=async()=>{const token=++generation;resetResults();$('input').value='';const f=$('file').files[0];if(!f)return;if(f.size>20*1024*1024){$('error').textContent='File exceeds the 20 MiB limit.';return;}$('status').textContent='Reading file…';try{const text=await f.text();if(token!==generation)return;inspect(text);}catch{if(token===generation){resetResults();$('error').textContent='Could not read this file.';}}};
 $('clear').onclick=()=>{generation++;$('input').value='';$('file').value='';resetResults();$('status').textContent='All loaded data cleared from the interface.';};
 $('run').onchange=updateGroups;$('group').onchange=render;$('outcome').onchange=()=>{limit=50;renderRows();};$('more').onclick=()=>{limit+=50;renderRows();};$('compare').onclick=compare;$('left').onchange=compare;$('right').onchange=compare;
 $('export').onclick=()=>{if(!audit)return;const report={...audit,generated_at:new Date().toISOString(),caveats:['Human supplied evidence, action and quality labels. No automatic visual inspection or judgment.','Descriptive sample rates, not deployment readiness or significance.','Rates exclude execution failures and unknown evidence where defined. Inspect denominators.','No data sent to a server. Downloads contain notes and IDs; review before sharing.'],rows:records};if($('left').value!==$('right').value)report.comparison=E.compare(records,$('left').value,$('right').value);download('evidence-lens-audit.json',JSON.stringify(report,null,2),'application/json');};

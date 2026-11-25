@@ -2,19 +2,22 @@
 (function(root){
 const FIELDS=['id','run','evidence','decision','correct','group','note'];
 function fail(message){throw new Error(message);}
-function parseCSV(text){
+function parseCSV(text,{maxRows=Infinity,maxColumns=Infinity,maxFieldLength=Infinity}={}){
   const out=[]; let row=[], field='', quoted=false, ended=false;
+  function append(c){if(field.length>=maxFieldLength)fail('CSV field exceeds the 4,000-character limit.');field+=c;}
+  function pushField(){if(row.length>=maxColumns)fail('CSV has too many fields; at most '+maxColumns+' supported.');row.push(field);}
+  function pushRow(){if(out.length>=maxRows)fail('At most 50,000 records are supported.');out.push(row);}
   for(let i=0;i<text.length;i++){
     const c=text[i];
-    if(quoted){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{quoted=false;ended=true;}}else field+=c;}
-    else if(ended){if(c===','){row.push(field);field='';ended=false;}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);out.push(row);row=[];field='';ended=false;}else fail('Unexpected text after closing CSV quote.');}
+    if(quoted){if(c==='"'){if(text[i+1]==='"'){append('"');i++;}else{quoted=false;ended=true;}}else append(c);}
+    else if(ended){if(c===','){pushField();field='';ended=false;}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;pushField();pushRow();row=[];field='';ended=false;}else fail('Unexpected text after closing CSV quote.');}
     else if(c==='"'){if(field!=='')fail('CSV quote must begin a field.');quoted=true;}
-    else if(c===','){row.push(field);field='';}
-    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);out.push(row);row=[];field='';}
-    else field+=c;
+    else if(c===','){pushField();field='';}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;pushField();pushRow();row=[];field='';}
+    else append(c);
   }
   if(quoted)fail('Unclosed CSV quote.');
-  if(field!==''||row.length||ended){row.push(field);out.push(row);}
+  if(field!==''||row.length||ended){pushField();pushRow();}
   return out;
 }
 function parse(text,format='auto'){
@@ -25,11 +28,17 @@ function parse(text,format='auto'){
   if(format==='auto')format=text.trimStart().startsWith('{')?'jsonl':'csv';
   let rows;
   if(format==='jsonl'){
-    const lines=text.split(/\r?\n/).filter(x=>x.trim());
-    if(lines.length>50000)fail('At most 50,000 records are supported.');
-    rows=lines.map((line,i)=>{try{return JSON.parse(line);}catch{fail('Invalid JSON on non-empty line '+(i+1)+'.');}});
+    rows=[];let start=0,lineNumber=0;
+    for(let i=0;i<=text.length;i++){
+      if(i!==text.length&&text[i]!=='\n')continue;
+      const line=text.slice(start,i);start=i+1;
+      if(!line.trim())continue;
+      if(rows.length>=50000)fail('At most 50,000 records are supported.');
+      lineNumber++;
+      try{rows.push(JSON.parse(line));}catch{fail('Invalid JSON on non-empty line '+lineNumber+'.');}
+    }
   }else if(format==='csv'){
-    const data=parseCSV(text);const header=data.shift()||[];
+    const data=parseCSV(text,{maxRows:50001,maxColumns:FIELDS.length,maxFieldLength:4000});const header=data.shift()||[];
     if(new Set(header).size!==header.length)fail('CSV headers must be unique.');
     for(const f of ['id','run','evidence','decision'])if(!header.includes(f))fail('CSV is missing header: '+f);
     for(const f of header)if(!FIELDS.includes(f))fail('Unknown CSV header: '+f);

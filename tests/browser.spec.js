@@ -12,3 +12,15 @@ test('50k records analyze without excessive delay',async({page})=>{test.setTimeo
 test('clear removes imported text from hidden rendered nodes as well as input',async({page})=>{await open(page);await page.fill('#input',JSON.stringify({id:'private-id-729',run:'private-run-729',evidence:'sufficient',decision:'answer',correct:true,group:'private-group-729',note:'private-note-729'}));await page.click('#analyze');await expect(page.locator('#rows')).toContainText('private-note-729');await page.click('#clear');expect(await page.evaluate(()=>document.body.textContent.includes('private-note-729'))).toBe(false);expect(await page.evaluate(()=>document.body.textContent.includes('private-run-729'))).toBe(false);await expect(page.locator('#input')).toHaveValue('');await expect(page.locator('#rows .row')).toHaveCount(0);});
 
 test('comparison follows either dropdown and agrees with exported audit',async({page})=>{await open(page);await page.click('#demo');await page.click('#compare');await page.selectOption('#right','Balanced preview');await expect(page.locator('#comparison')).toContainText('Comparing Always answers → Balanced preview');await expect(page.locator('#comparison')).toContainText(E.compare(E.validate(E.demo()),'Always answers','Balanced preview').changed+' changed outcomes');await page.selectOption('#left','Always abstains');await expect(page.locator('#comparison')).toContainText('Comparing Always abstains → Balanced preview');const dl=page.waitForEvent('download');await page.click('#export');const d=await dl;const fs=require('node:fs');const report=JSON.parse(fs.readFileSync(await d.path(),'utf8'));expect(report.comparison.from).toBe('Always abstains');expect(report.comparison.to).toBe('Balanced preview');await expect(page.locator('#comparison')).toContainText(report.comparison.changed+' changed outcomes');await page.selectOption('#right','Always abstains');await expect(page.locator('#comparison')).toHaveText('Choose different runs.');});
+
+test('newline-heavy and delimiter-heavy CSV reject promptly and can recover',async({page})=>{
+ await open(page);
+ for(const body of ['\n'.repeat(1000000),','.repeat(1000000)]){
+  await page.locator('#file').setInputFiles({name:'stress.csv',mimeType:'text/csv',buffer:Buffer.from('id,run,evidence,decision\n'+body)});
+  await expect(page.locator('#error')).toContainText(/50,000|too many fields/);
+  await expect(page.locator('#results')).toBeHidden();await expect(page.locator('#input')).toHaveValue('');
+  await page.screenshot({path:'screenshots/bounded-import-rejected.png',fullPage:true});
+  await page.click('#demo');await expect(page.locator('#status')).toContainText('36 records');
+ }
+ await page.screenshot({path:'screenshots/bounded-import-recovery.png',fullPage:true});
+});

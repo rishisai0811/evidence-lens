@@ -22,3 +22,17 @@ test('CSV rejects extra fields',()=>assert.throws(()=>E.parse('id,run,evidence,d
 test('50k supported and larger rejected',()=>{const rows=Array.from({length:50000},(_,i)=>r({id:String(i)}));assert.equal(E.validate(rows).length,50000);assert.throws(()=>E.validate([...rows,r({id:'50000'})]));});
 test('generated CSV round trip 200 diverse records',()=>{let s=123;const rand=()=>{s=(s*1664525+1013904223)>>>0;return s;};const rows=E.validate(Array.from({length:200},(_,i)=>r({id:String(i),note:Array.from({length:30},()=>['a',',','"','\n','\r','<','é'][rand()%7]).join('')})));assert.deepEqual(E.parse(E.toCSV(rows)),rows);});
 test('independent reference checks across 1000 generated datasets',()=>{let seed=729;const rnd=n=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed%n;};for(let trial=0;trial<1000;trial++){const rows=Array.from({length:1+rnd(200)},(_,i)=>{const evidence=['sufficient','insufficient','unknown'][rnd(3)],decision=['answer','abstain','error','truncated'][rnd(4)];return{id:String(i),run:'test',evidence,decision,correct:evidence==='sufficient'&&decision==='answer'?[true,false,null][rnd(3)]:null};});const s=E.summarize(E.validate(rows)),complete=rows.filter(r=>['answer','abstain'].includes(r.decision)),insufficient=complete.filter(r=>r.evidence==='insufficient'),sufficient=complete.filter(r=>r.evidence==='sufficient');const refs={unsupported:[insufficient.filter(r=>r.decision==='answer').length,insufficient.length],unnecessary:[sufficient.filter(r=>r.decision==='abstain').length,sufficient.length],completion:[complete.length,rows.length],usefulYield:[rows.filter(r=>r.evidence==='sufficient'&&r.decision==='answer'&&r.correct===true).length,rows.filter(r=>r.evidence==='sufficient').length]};for(const[k,[n,d]]of Object.entries(refs)){assert.equal(s.rates[k].numerator,n);assert.equal(s.rates[k].denominator,d);assert.equal(s.rates[k].value,d?n/d:null);}assert.equal(Object.values(s.outcomes).reduce((a,b)=>a+b,0),rows.length);}});
+
+test('CSV limits are enforced while tokenizing rows and fields',()=>{
+ assert.throws(()=>E.parse('id,run,evidence,decision\n'+'\n'.repeat(50001)),/50,000/);
+ assert.throws(()=>E.parse('id,run,evidence,decision\n'+','.repeat(1000000)),/too many fields/);
+});
+test('JSONL tolerates many blank lines without changing record numbering',()=>{
+ const prefix='\n'.repeat(1000000);assert.equal(E.parse(prefix+JSON.stringify(r())).length,1);
+ assert.throws(()=>E.parse(prefix+JSON.stringify(r())+'\n\n{bad'),/non-empty line 2/);
+});
+test('CSV rejects oversized quoted and unquoted fields during tokenizing',()=>{
+ assert.throws(()=>E.parse('id,run,evidence,decision,note\na,b,unknown,answer,'+'x'.repeat(1000000)),/4,000-character/);
+ assert.throws(()=>E.parse('id,run,evidence,decision,note\na,b,unknown,answer,"'+'x'.repeat(1000000)+'"'),/4,000-character/);
+ const rows=E.validate([r({note:'"'.repeat(4000)})]);assert.deepEqual(E.parse(E.toCSV(rows)),rows);
+});

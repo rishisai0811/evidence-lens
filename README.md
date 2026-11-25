@@ -88,3 +88,8 @@ Clear and input replacement now remove rendered records and run labels from the 
 ## v0.1.2 comparison refresh
 
 Changing either comparison-run selector now refreshes the comparison immediately and displays the pair's names. Previously the selected pair could change while the old metrics stayed visible until Compare was clicked; exported audit JSON used the new pair. The new browser regression checks either selector, same-run error cleanup and screen/export agreement.39 unit tests and13 Linux Chromium tests pass; All13 Linux Firefox browser tests also pass. No data was altered by this display bug. Other limitations and unvalidated adoption remain unchanged.
+
+## v0.1.3 bounded imports, recovered November25
+Reconstructed from the public0.1.2 baseline and recorded correction after the private build files expired. This archive is newly verified, not byte-identical to the prior private ZIP. CSV enforces row, column and field-length limits while tokenizing; JSONL reads non-empty lines incrementally. File inputs validate before filling the textarea. Invalid files leave an empty textarea and no old report. Paste remains subject to browser textarea limits before inspection. These safeguards do not guarantee every browser memory bound. No adoption, revenue or automatic-evaluation claim.
+
+Recovered candidate verification on November25,2026:42 unit tests,14 Linux Chromium browser tests and14 Linux Firefox browser tests passed. Exact50,000-row CSV acceptance,50,001-row rejection and4,000 escaped quote characters verified.64MiB Node subprocesses rejected newline-heavy/field-heavy CSV normally and accepted10million blank JSONL lines plus one valid record. Windows, macOS, WebKit and real mobile devices remain unverified.
